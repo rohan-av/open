@@ -3,6 +3,7 @@ const childProcess = require('child_process');
 const {promises: fs, constants: fsConstants} = require('fs');
 const isWsl = require('is-wsl');
 const isDocker = require('is-docker');
+const isPodman = require('is-podman');
 const defineLazyProperty = require('define-lazy-prop');
 
 // Path to included `xdg-open`.
@@ -124,7 +125,7 @@ const open = async (target, options) => {
 		if (app) {
 			cliArguments.push('-a', app);
 		}
-	} else if (platform === 'win32' || (isWsl && !isDocker())) {
+	} else if (platform === 'win32' || (isWsl && !isDocker() && !isPodman())) {
 		const mountPoint = await getWslDrivesMountPoint();
 
 		command = isWsl ?
